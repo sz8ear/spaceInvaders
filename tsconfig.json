@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "rootDir": "./src", // `src/` 内のファイルをコンパイル対象にする
+    "strict": true
+  }
+}

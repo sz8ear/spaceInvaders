@@ -1,0 +1,13 @@
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: url(assets/image/background.webp);
+}
+
+canvas {
+  border: 1px solid white;
+  background: rgba(0, 0, 0, 0.7);
+}
