@@ -1,8 +1,8 @@
 "use strict";
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
-canvas.width = 800;
-canvas.height = 600;
+canvas.width = window.innerWidth > 800 ? 800 : window.innerWidth;
+canvas.height = window.innerHeight > 600 ? 600 : window.innerHeight;
 let gameOver = false;
 let gameStarted = false; // スペースキーを押すまで開始しない
 let moveLeft = false;
@@ -152,7 +152,7 @@ function drawStartScreen() {
     ctx.font = "30px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText("Press SPACE to Start", canvas.width / 2, canvas.height / 2);
+    ctx.fillText("Press SPACE or Tap to Start", canvas.width / 2, canvas.height / 2);
 }
 // キーイベント処理
 document.addEventListener("keydown", (e) => {
@@ -220,6 +220,28 @@ function checkCollisions() {
         }, 1000);
     }
 }
+canvas.addEventListener("touchstart", (e) => {
+    if (!gameStarted) {
+        gameStarted = true;
+        gameLoop();
+        return;
+    }
+    let touchX = e.touches[0].clientX;
+    let canvasMiddle = canvas.width / 2;
+    if (touchX < canvasMiddle * 0.4) {
+        moveLeft = true;
+    }
+    else if (touchX > canvasMiddle * 1.6) {
+        moveRight = true;
+    }
+    else {
+        player.shoot();
+    }
+});
+canvas.addEventListener("touchend", () => {
+    moveLeft = false;
+    moveRight = false;
+});
 // ゲームループ
 function gameLoop() {
     if (gameOver) {
@@ -228,7 +250,7 @@ function gameLoop() {
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2);
-        ctx.fillText("Press SPACE to Restart", canvas.width / 2, canvas.height / 2 + 40);
+        ctx.fillText("Press SPACE or Tap to Restart", canvas.width / 2, canvas.height / 2 + 40);
         return;
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
