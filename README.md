@@ -28,7 +28,7 @@
 ---
 
 ## 🚀 デモ
-[GitHub Pages](https://spaceinvaders.gh.s35gyllt.net/)
+[GitHub Pages](https://spaceinvaders.gh.8ear.org/)
 
 ---
 
