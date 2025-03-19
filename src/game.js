@@ -4,38 +4,39 @@ const ctx = canvas.getContext("2d");
 canvas.width = 800;
 canvas.height = 600;
 let gameOver = false;
+let gameStarted = false; // スペースキーを押すまで開始しない
 let moveLeft = false;
 let moveRight = false;
 let player;
 let enemies = [];
 let score = 0;
 let wave = 1;
-let previousEnemyCount = 3; // 最初の敵の数を記録
-let spawningNewWave = false; // ウェーブ更新中フラグ
-// プレイヤー
+let previousEnemyCount = 3;
+let spawningNewWave = false;
+// プレイヤークラス
 class Player {
     constructor() {
         this.speed = 5;
         this.bullets = [];
         this.x = canvas.width / 2;
-        this.y = canvas.height - 40; // 🚀の表示位置調整
+        this.y = canvas.height - 40;
     }
     move() {
         if (moveLeft)
             this.x -= this.speed;
         if (moveRight)
             this.x += this.speed;
-        this.x = Math.max(0, Math.min(canvas.width - 40, this.x)); // 画面外に出ないように調整
+        this.x = Math.max(0, Math.min(canvas.width - 40, this.x));
     }
     shoot() {
-        this.bullets.push(new Bullet(this.x, this.y - 10)); // 中央から発射
+        this.bullets.push(new Bullet(this.x, this.y - 10));
     }
     update() {
         this.move();
         this.bullets.forEach((bullet, index) => {
             bullet.update();
             if (bullet.y < 0)
-                this.bullets.splice(index, 1); // 画面外の弾を削除
+                this.bullets.splice(index, 1);
         });
     }
     draw() {
@@ -78,7 +79,7 @@ class Bullet {
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }
 }
-// 敵
+// 敵クラス
 class Enemy {
     constructor(x, y, speed) {
         this.width = 40;
@@ -95,15 +96,12 @@ class Enemy {
             this.direction *= -1;
             this.y += this.height;
         }
-        // ランダムで弾を撃つ（確率 1% に調整）
-        if (Math.random() < 0.01) {
+        if (Math.random() < 0.01)
             this.shoot();
-        }
         this.bullets.forEach((bullet, index) => {
             bullet.update();
-            if (bullet.y > canvas.height) {
+            if (bullet.y > canvas.height)
                 this.bullets.splice(index, 1);
-            }
         });
     }
     shoot() {
@@ -125,7 +123,7 @@ function spawnEnemies() {
         enemies.push(new Enemy(x, y, enemySpeed));
     }
 }
-// スコアとウェーブを描画
+// スコアとウェーブ描画
 function drawScoreAndWave() {
     ctx.strokeStyle = "white";
     ctx.lineWidth = 2;
@@ -139,26 +137,42 @@ function drawScoreAndWave() {
 // ゲームリセット
 function resetGame() {
     gameOver = false;
+    gameStarted = false; // 初期状態ではゲームを開始しない
     score = 0;
     wave = 1;
-    previousEnemyCount = 3; // 初期敵数
+    previousEnemyCount = 3;
     player = new Player();
     spawnEnemies();
-    gameLoop();
+    drawStartScreen();
+}
+// スタート画面を表示
+function drawStartScreen() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "white";
+    ctx.font = "30px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("Press SPACE to Start", canvas.width / 2, canvas.height / 2);
 }
 // キーイベント処理
 document.addEventListener("keydown", (e) => {
-    if (gameOver) {
-        if (e.key === " ")
-            resetGame();
+    if (!gameStarted && e.key === " ") {
+        gameStarted = true;
+        gameLoop();
         return;
     }
-    if (e.key === "ArrowLeft")
-        moveLeft = true;
-    if (e.key === "ArrowRight")
-        moveRight = true;
-    if (e.key === " ")
-        player.shoot();
+    if (gameOver && e.key === " ") {
+        resetGame();
+        return;
+    }
+    if (gameStarted) {
+        if (e.key === "ArrowLeft")
+            moveLeft = true;
+        if (e.key === "ArrowRight")
+            moveRight = true;
+        if (e.key === " ")
+            player.shoot();
+    }
 });
 document.addEventListener("keyup", (e) => {
     if (e.key === "ArrowLeft")
@@ -180,7 +194,6 @@ function checkCollisions() {
             }
         });
     });
-    // 敵とプレイヤーの衝突判定（ゲームオーバー処理）
     enemies.forEach((enemy) => {
         if (player.x < enemy.x + enemy.width &&
             player.x + 30 > enemy.x &&
@@ -188,7 +201,6 @@ function checkCollisions() {
             player.y + 30 > enemy.y) {
             gameOver = true;
         }
-        // 敵の弾とプレイヤーの当たり判定
         enemy.bullets.forEach((bullet, bulletIndex) => {
             if (bullet.x < player.x + 30 &&
                 bullet.x + bullet.width > player.x &&
@@ -198,11 +210,10 @@ function checkCollisions() {
             }
         });
     });
-    // 敵を全滅したら次のウェーブへ（前回の敵数+10で増やす）
     if (enemies.length === 0 && !spawningNewWave) {
         spawningNewWave = true;
         wave++;
-        previousEnemyCount += 10; // 次のウェーブでは敵を+10増やす
+        previousEnemyCount += 10;
         setTimeout(() => {
             spawnEnemies();
             spawningNewWave = false;
@@ -234,5 +245,5 @@ function gameLoop() {
     checkCollisions();
     requestAnimationFrame(gameLoop);
 }
-// ゲーム開始
+// 初期化
 resetGame();
