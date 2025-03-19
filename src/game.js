@@ -1,8 +1,6 @@
 "use strict";
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth > 800 ? 800 : window.innerWidth;
-canvas.height = window.innerHeight > 600 ? 600 : window.innerHeight;
 let gameOver = false;
 let gameStarted = false; // スペースキーを押すまで開始しない
 let moveLeft = false;
@@ -13,6 +11,20 @@ let score = 0;
 let wave = 1;
 let previousEnemyCount = 3;
 let spawningNewWave = false;
+function resizeCanvas() {
+    if (window.innerWidth > 800) {
+        canvas.width = 800;
+        canvas.height = 600;
+    }
+    else {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight - 100;
+    }
+}
+// 初回実行
+resizeCanvas();
+// ウィンドウサイズ変更時にも対応
+window.addEventListener("resize", resizeCanvas);
 // プレイヤークラス
 class Player {
     constructor() {
