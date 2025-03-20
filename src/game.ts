@@ -312,11 +312,16 @@ canvas.addEventListener("touchstart", (e) => {
   let touchX = e.touches[0].clientX;
   let canvasMiddle = canvas.width / 2;
 
-  if (touchX < canvasMiddle * 0.4) {
+  if (touchX < canvasMiddle * 0.8) {
+    // 画面左側タップ → 左移動
     moveLeft = true;
-  } else if (touchX > canvasMiddle * 1.6) {
+    moveRight = false;
+  } else if (touchX > canvasMiddle * 1.2) {
+    // 画面右側タップ → 右移動
     moveRight = true;
+    moveLeft = false;
   } else {
+    // 画面中央タップ → 攻撃
     player.shoot();
   }
 });
