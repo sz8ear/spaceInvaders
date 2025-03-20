@@ -17,9 +17,16 @@ function resizeCanvas() {
         canvas.height = 600;
     }
     else {
-        canvas.width = window.innerWidth;
+        canvas.width = window.innerWidth - 20;
         canvas.height = window.innerHeight - 100;
     }
+}
+function drawTextResponsive(text, x, y, baseSize = 30) {
+    const fontSize = Math.max(12, canvas.width / 20); // 最小サイズを12pxにする
+    ctx.font = `${fontSize}px Arial`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(text, x, y, canvas.width * 0.9); // maxWidth を canvas の 90% に設定
 }
 // 初回実行
 resizeCanvas();
@@ -52,7 +59,8 @@ class Player {
         });
     }
     draw() {
-        ctx.font = "30px Arial";
+        const fontSize = Math.max(20, canvas.width / 25);
+        ctx.font = `${fontSize}px Arial`;
         ctx.textAlign = "center";
         ctx.fillText("🚀", this.x, this.y);
         this.bullets.forEach((bullet) => bullet.draw());
@@ -120,6 +128,8 @@ class Enemy {
         this.bullets.push(new EnemyBullet(this.x + this.width / 2, this.y + this.height));
     }
     draw() {
+        const fontSize = Math.max(20, canvas.width / 25);
+        ctx.font = `${fontSize}px Arial`;
         ctx.fillText("👾", this.x, this.y);
         this.bullets.forEach((bullet) => bullet.draw());
     }
@@ -137,14 +147,17 @@ function spawnEnemies() {
 }
 // スコアとウェーブ描画
 function drawScoreAndWave() {
-    ctx.strokeStyle = "white";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(10, 10, 150, 50);
+    if (canvas.width > 800) {
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(10, 10, 150, 50);
+    }
     ctx.fillStyle = "white";
-    ctx.font = "18px Arial";
+    const fontSize = Math.max(12, canvas.width / 30);
+    ctx.font = `${fontSize}px Arial`;
     ctx.textAlign = "left";
-    ctx.fillText("Score: " + score, 20, 30);
-    ctx.fillText("Wave: " + wave, 20, 50);
+    ctx.fillText(`Score: ${score}`, 20, 30);
+    ctx.fillText(`Wave: ${wave}`, 20, 50);
 }
 // ゲームリセット
 function resetGame() {
@@ -161,10 +174,13 @@ function resetGame() {
 function drawStartScreen() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "white";
-    ctx.font = "30px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("Press SPACE or Tap to Start", canvas.width / 2, canvas.height / 2);
+    drawTextResponsive("Press SPACE or Tap to Start", canvas.width / 2, canvas.height / 2);
+}
+// ゲームオーバー画面
+function gameOverScreen() {
+    ctx.fillStyle = "red";
+    drawTextResponsive("GAME OVER", canvas.width / 2, canvas.height / 2);
+    drawTextResponsive("Press SPACE or Tap to Restart", canvas.width / 2, canvas.height / 2 + 40);
 }
 // キーイベント処理
 document.addEventListener("keydown", (e) => {
@@ -257,12 +273,7 @@ canvas.addEventListener("touchend", () => {
 // ゲームループ
 function gameLoop() {
     if (gameOver) {
-        ctx.fillStyle = "red";
-        ctx.font = "30px Arial";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2);
-        ctx.fillText("Press SPACE or Tap to Restart", canvas.width / 2, canvas.height / 2 + 40);
+        gameOverScreen();
         return;
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);

@@ -8,6 +8,7 @@ body {
   background: url(assets/image/background.webp);
   background-size: cover;
   background-position: center;
+  overflow: hidden;
 }
 
 canvas {
