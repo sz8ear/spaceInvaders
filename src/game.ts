@@ -304,6 +304,11 @@ canvas.addEventListener("touchstart", (e) => {
     return;
   }
 
+  if (gameOver) {
+    resetGame();
+    return;
+  }
+
   let touchX = e.touches[0].clientX;
   let canvasMiddle = canvas.width / 2;
 
