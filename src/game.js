@@ -18,7 +18,7 @@ function resizeCanvas() {
     }
     else {
         canvas.width = window.innerWidth - 20;
-        canvas.height = window.innerHeight - 100;
+        canvas.height = window.innerHeight - 20;
     }
 }
 function drawTextResponsive(text, x, y, baseSize = 30) {
@@ -301,3 +301,22 @@ function gameLoop() {
 }
 // 初期化
 resetGame();
+// いいねボタンの配置
+document.addEventListener("DOMContentLoaded", () => {
+    const toggleBtn = document.getElementById("toggleFavBtn");
+    const favContainer = document.getElementById("favContainer");
+    if (!toggleBtn || !favContainer) {
+        console.error("toggleBtn または favContainer が見つかりません");
+        return;
+    }
+    toggleBtn.addEventListener("click", () => {
+        favContainer.classList.toggle("show");
+        // アイコンの変更
+        if (favContainer.classList.contains("show")) {
+            toggleBtn.textContent = "👍";
+        }
+        else {
+            toggleBtn.textContent = "👉";
+        }
+    });
+});

@@ -16,3 +16,38 @@ canvas {
   border: 1px solid white;
   background: rgba(0, 0, 0, 0.7);
 }
+
+/* 800px 以上の画面では非表示 */
+@media (min-width: 800px) {
+  #toggleFavBtn {
+    display: none;
+  }
+}
+
+@media (max-width: 800px) {
+  #toggleFavBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1001;
+  }
+
+  #favContainer {
+    position: absolute;
+    top: 5%;
+    right: -200px; /* 初期状態では画面外 */
+    transform: translateY(-5%);
+    transition: right 0.3s ease-in-out;
+    z-index: 1000;
+  }
+
+  #favContainer.show {
+    right: 10px; /* 画面内にスライドイン */
+  }
+
+  p {
+    margin: 0;
+  }
+}
