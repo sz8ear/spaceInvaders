@@ -4,7 +4,6 @@ body {
   flex-flow: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
   background: url(assets/image/background.webp);
   background-size: cover;
   background-position: center;
