@@ -378,3 +378,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// ダブルクリックした時に無効にする
+document.addEventListener(
+  "dblclick",
+  (evt) => {
+    evt.preventDefault();
+  },
+  { passive: false }
+);
