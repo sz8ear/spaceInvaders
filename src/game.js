@@ -210,6 +210,7 @@ document.addEventListener("keyup", (e) => {
 });
 // 衝突判定
 function checkCollisions() {
+    // 弾と敵の当たり判定
     player.bullets.forEach((bullet, bulletIndex) => {
         enemies.forEach((enemy, enemyIndex) => {
             if (bullet.x < enemy.x + enemy.width &&
@@ -222,6 +223,7 @@ function checkCollisions() {
             }
         });
     });
+    // 敵とプレイヤーの当たり判定
     enemies.forEach((enemy) => {
         if (player.x < enemy.x + enemy.width &&
             player.x + 30 > enemy.x &&
@@ -238,11 +240,12 @@ function checkCollisions() {
             }
         });
     });
+    // Wave クリア後の処理
     if (enemies.length === 0 && !spawningNewWave) {
         spawningNewWave = true;
-        wave++;
-        previousEnemyCount += 10;
         setTimeout(() => {
+            wave++;
+            previousEnemyCount += 10;
             spawnEnemies();
             spawningNewWave = false;
         }, 1000);
