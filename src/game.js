@@ -147,7 +147,7 @@ function spawnEnemies() {
 }
 // スコアとウェーブ描画
 function drawScoreAndWave() {
-    if (canvas.width > 800) {
+    if (window.innerWidth > 800) {
         ctx.strokeStyle = "white";
         ctx.lineWidth = 2;
         ctx.strokeRect(10, 10, 150, 50);
@@ -320,3 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+// ダブルクリックした時に無効にする
+document.addEventListener("dblclick", (evt) => {
+    evt.preventDefault();
+}, { passive: false });
