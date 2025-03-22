@@ -153,7 +153,7 @@ function drawScoreAndWave() {
         ctx.strokeRect(10, 10, 150, 50);
     }
     ctx.fillStyle = "white";
-    const fontSize = Math.max(12, canvas.width / 30);
+    const fontSize = window.innerWidth > 800 ? 16 : Math.max(12, canvas.width / 30);
     ctx.font = `${fontSize}px Arial`;
     ctx.textAlign = "left";
     ctx.fillText(`Score: ${score}`, 20, 30);
