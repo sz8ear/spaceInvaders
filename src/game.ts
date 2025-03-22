@@ -165,11 +165,15 @@ class Enemy {
 // 敵を生成
 function spawnEnemies() {
   enemies = [];
-  let startY = 50;
-  let enemySpeed = 1 + wave * 0.2;
+  const columns = Math.floor(canvas.width / 80); // 横に何体並べるか（80pxごと）
+  const rows = Math.ceil(previousEnemyCount / columns); // 必要な行数
+  const enemySpeed = 1 + wave * 0.2;
+
   for (let i = 0; i < previousEnemyCount; i++) {
-    let x = (i % 6) * 80 + 50;
-    let y = startY + Math.floor(i / 6) * 40;
+    const col = i % columns;
+    const row = Math.floor(i / columns);
+    const x = col * 80 + 20;
+    const y = 50 + row * 40;
     enemies.push(new Enemy(x, y, enemySpeed));
   }
 }
